@@ -1,7 +1,7 @@
 package QuantityMeasurementApplication;
 import java.util.*;
 public class QuantityMeasurementApp {
-	 static class Feet {
+	  public static class Feet {
 	        private final double value;
 	        public Feet(double value) {
 	            this.value = value;
