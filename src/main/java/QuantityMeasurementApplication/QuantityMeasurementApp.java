@@ -22,31 +22,16 @@ public class QuantityMeasurementApp {
 
     public static void main(String[] args) {
 
-        // Length examples
-        Quantity<LengthUnit> feet =
-                new Quantity<>(1.0, LengthUnit.FEET);
+    	Quantity<VolumeUnit> litre =
+    	        new Quantity<>(1.0, VolumeUnit.LITRE);
 
-        Quantity<LengthUnit> inches =
-                new Quantity<>(12.0, LengthUnit.INCHES);
+    	Quantity<VolumeUnit> ml =
+    	        new Quantity<>(1000.0, VolumeUnit.MILLILITRE);
 
-        demonstrateEquality(feet, inches);
+    	System.out.println(litre.equals(ml));
 
-        demonstrateConversion(feet, LengthUnit.INCHES);
+    	System.out.println(litre.convertTo(VolumeUnit.GALLON));
 
-        demonstrateAddition(feet, inches, LengthUnit.FEET);
-
-
-        // Weight examples
-        Quantity<WeightUnit> kg =
-                new Quantity<>(1.0, WeightUnit.KILOGRAM);
-
-        Quantity<WeightUnit> gram =
-                new Quantity<>(1000.0, WeightUnit.GRAM);
-
-        demonstrateEquality(kg, gram);
-
-        demonstrateConversion(kg, WeightUnit.GRAM);
-
-        demonstrateAddition(kg, gram, WeightUnit.KILOGRAM);
+    	System.out.println(litre.add(ml));
     }
 }
