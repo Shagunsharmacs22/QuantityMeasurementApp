@@ -19,19 +19,38 @@ public class QuantityMeasurementApp {
 
         System.out.println("Sum = " + q1.add(q2, targetUnit));
     }
+    //uc12
+    public static <U extends IMeasurable> void demonstrateSubtraction(
+            Quantity<U> q1, Quantity<U> q2) {
+
+        Quantity<U> result = q1.subtract(q2);
+
+        System.out.println("Subtracting: " + q1 + " - " + q2);
+        System.out.println("Result: " + result);
+    }
+    
+    public static <U extends IMeasurable> void demonstrateDivision(
+            Quantity<U> q1, Quantity<U> q2) {
+
+        double result = q1.divide(q2);
+
+        System.out.println("Dividing: " + q1 + " / " + q2);
+        System.out.println("Result: " + result);
+    }
 
     public static void main(String[] args) {
 
-    	Quantity<VolumeUnit> litre =
-    	        new Quantity<>(1.0, VolumeUnit.LITRE);
+        Quantity<LengthUnit> feet =
+                new Quantity<>(10.0, LengthUnit.FEET);
 
-    	Quantity<VolumeUnit> ml =
-    	        new Quantity<>(1000.0, VolumeUnit.MILLILITRE);
+        Quantity<LengthUnit> inches =
+                new Quantity<>(6.0, LengthUnit.INCHES);
 
-    	System.out.println(litre.equals(ml));
+        demonstrateSubtraction(feet, inches);
 
-    	System.out.println(litre.convertTo(VolumeUnit.GALLON));
-
-    	System.out.println(litre.add(ml));
+        demonstrateDivision(
+                new Quantity<>(10.0, LengthUnit.FEET),
+                new Quantity<>(2.0, LengthUnit.FEET)
+        );
     }
 }
