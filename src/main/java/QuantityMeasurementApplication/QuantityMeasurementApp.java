@@ -25,17 +25,16 @@ public class QuantityMeasurementApp {
 
 
 	public static void main(String[] args) {
+	    Length l1 = new Length(1.0, Length.LengthUnit.FEET);
+	    Length l2 = new Length(12.0, Length.LengthUnit.INCHES);
 
-        Length l1 =
-                new Length(1.0,
-                        Length.LengthUnit.FEET);
+	    Length resultFeet = l1.add(l2, Length.LengthUnit.FEET);
+	    Length resultInches = l1.add(l2, Length.LengthUnit.INCHES);
+	    Length resultYards = l1.add(l2, Length.LengthUnit.YARDS);
 
-        Length l2 =
-                new Length(12.0,
-                        Length.LengthUnit.INCHES);
+	    System.out.println(resultFeet); 
+	    System.out.println(resultInches); 
+	    System.out.println(resultYards); 
 
-        Length result = l1.add(l2);
-
-        System.out.println(result);
     }
 }
