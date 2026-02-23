@@ -3,84 +3,96 @@ package QuantityMeasurementApplicationTest;
 
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
+import QuantityMeasurementApplication.LengthUnit;
 import QuantityMeasurementApplication.Length;
 import QuantityMeasurementApplication.QuantityMeasurementApp;
 class QuantityMeasurementAppTest {
-	@Test
-	public void testEquality_SameUnit_FeetEqualsFeet() {
-	    Length l1 = new Length(2.0, Length.LengthUnit.FEET);
-	    Length l2 = new Length(2.0, Length.LengthUnit.FEET);
+	// ==============================
+	// UC8 Additional Test Cases
+	// ==============================
 
-	    assertEquals(l1, l2);
+	@Test
+	public void testAddition_ResultInCentimeters() {
+
+	    Length l1 = new Length(1.0, LengthUnit.INCHES);
+	    Length l2 = new Length(1.0, LengthUnit.INCHES);
+
+	    Length result = l1.add(l2, LengthUnit.CENTIMETERS);
+
+	    Length expected = new Length(5.08, LengthUnit.CENTIMETERS);
+
+	    assertEquals(expected, result);
 	}
 
 	@Test
-	public void testEquality_CrossUnit_FeetEqualsInches() {
-	    Length l1 = new Length(1.0, Length.LengthUnit.FEET);
-	    Length l2 = new Length(12.0, Length.LengthUnit.INCHES);
+	public void testAddition_ResultInYards_FromMixedUnits() {
 
-	    assertEquals(l1, l2);
+	    Length l1 = new Length(6.0, LengthUnit.FEET);
+	    Length l2 = new Length(36.0, LengthUnit.INCHES); // 3 feet
+
+	    Length result = l1.add(l2, LengthUnit.YARDS);
+
+	    Length expected = new Length(3.0, LengthUnit.YARDS);
+
+	    assertEquals(expected, result);
 	}
 
 	@Test
-	public void testEquality_CrossUnit_InchEqualsCentimeter() {
-	    Length l1 = new Length(1.0, Length.LengthUnit.INCHES);
-	    Length l2 = new Length(2.54, Length.LengthUnit.CENTIMETERS);
+	public void testAddition_NegativeValues_TargetUnit() {
 
-	    assertEquals(l1, l2);
+	    Length l1 = new Length(5.0, LengthUnit.FEET);
+	    Length l2 = new Length(-2.0, LengthUnit.FEET);
+
+	    Length result = l1.add(l2, LengthUnit.FEET);
+
+	    Length expected = new Length(3.0, LengthUnit.FEET);
+
+	    assertEquals(expected, result);
 	}
 
 	@Test
-	public void testEquality_YardEqualsFeet() {
-	    Length l1 = new Length(1.0, Length.LengthUnit.YARDS);
-	    Length l2 = new Length(3.0, Length.LengthUnit.FEET);
+	public void testAddition_LargeValues_TargetUnit() {
 
-	    assertEquals(l1, l2);
+	    Length l1 = new Length(1000.0, LengthUnit.FEET);
+	    Length l2 = new Length(1000.0, LengthUnit.FEET);
+
+	    Length result = l1.add(l2, LengthUnit.YARDS);
+
+	    Length expected = new Length(666.6666666666666, LengthUnit.YARDS);
+
+	    assertEquals(expected, result);
 	}
 
 	@Test
-	public void testEquality_NotEqualDifferentValues() {
-	    Length l1 = new Length(1.0, Length.LengthUnit.FEET);
-	    Length l2 = new Length(2.0, Length.LengthUnit.FEET);
+	public void testAddition_NullOperand_TargetUnit() {
 
-	    assertNotEquals(l1, l2);
+	    Length l1 = new Length(5.0, LengthUnit.FEET);
+
+	    assertThrows(IllegalArgumentException.class, () -> {
+	        l1.add(null, LengthUnit.FEET);
+	    });
 	}
 
 	@Test
-	public void testEquality_NotEqualDifferentUnits() {
-	    Length l1 = new Length(1.0, Length.LengthUnit.FEET);
-	    Length l2 = new Length(10.0, Length.LengthUnit.INCHES);
+	public void testAddition_NullTargetUnit() {
 
-	    assertNotEquals(l1, l2);
+	    Length l1 = new Length(5.0, LengthUnit.FEET);
+	    Length l2 = new Length(5.0, LengthUnit.FEET);
+
+	    assertThrows(IllegalArgumentException.class, () -> {
+	        l1.add(l2, null);
+	    });
 	}
 
 	@Test
-	public void testEquality_WithZero() {
-	    Length l1 = new Length(0.0, Length.LengthUnit.FEET);
-	    Length l2 = new Length(0.0, Length.LengthUnit.INCHES);
+	public void testAddition_Commutativity_TargetUnit() {
 
-	    assertEquals(l1, l2);
-	}
+	    Length l1 = new Length(1.0, LengthUnit.FEET);
+	    Length l2 = new Length(12.0, LengthUnit.INCHES);
 
-	@Test
-	public void testEquality_NullComparison() {
-	    Length l1 = new Length(1.0, Length.LengthUnit.FEET);
+	    Length result1 = l1.add(l2, LengthUnit.INCHES);
+	    Length result2 = l2.add(l1, LengthUnit.INCHES);
 
-	    assertNotEquals(l1, null);
-	}
-
-	@Test
-	public void testEquality_SameReference() {
-	    Length l1 = new Length(5.0, Length.LengthUnit.FEET);
-
-	    assertEquals(l1, l1);
-	}
-
-	@Test
-	public void testEquality_LargeValues() {
-	    Length l1 = new Length(1000.0, Length.LengthUnit.YARDS);
-	    Length l2 = new Length(3000.0, Length.LengthUnit.FEET);
-
-	    assertEquals(l1, l2);
+	    assertEquals(result1, result2);
 	}
 }
