@@ -25,10 +25,17 @@ public class QuantityMeasurementApp {
 
 
 	public static void main(String[] args) {
-		demonstrateLengthComparison(1.0, Length.LengthUnit.FEET, 12.0, Length.LengthUnit.INCHES);
-		demonstrateLengthComparison(1.0, Length.LengthUnit.YARDS, 36.0, Length.LengthUnit.INCHES);
-		demonstrateLengthComparison(100.0, Length.LengthUnit.CENTIMETERS, 39.3701, Length.LengthUnit.INCHES);
-		demonstrateLengthComparison(3.0, Length.LengthUnit.FEET, 1.0, Length.LengthUnit.YARDS);
-		demonstrateLengthComparison(30.48, Length.LengthUnit.CENTIMETERS, 1.0, Length.LengthUnit.FEET);
-	}
+
+        Length l1 =
+                new Length(1.0,
+                        Length.LengthUnit.FEET);
+
+        Length l2 =
+                new Length(12.0,
+                        Length.LengthUnit.INCHES);
+
+        Length result = l1.add(l2);
+
+        System.out.println(result);
+    }
 }
