@@ -1,4 +1,6 @@
-package QuantityMeasurementApplication;
+package QuantityMeasurementApplication.model;
+
+import QuantityMeasurementApplication.units.LengthUnit;
 
 public class Length {
 

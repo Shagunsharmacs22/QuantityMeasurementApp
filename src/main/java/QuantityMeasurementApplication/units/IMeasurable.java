@@ -1,4 +1,4 @@
-package QuantityMeasurementApplication;
+package QuantityMeasurementApplication.units;
 
 
 @FunctionalInterface

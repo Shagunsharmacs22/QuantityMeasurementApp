@@ -1,6 +1,8 @@
-package QuantityMeasurementApplication;
+package QuantityMeasurementApplication.model;
 
 import java.util.Objects;
+
+import QuantityMeasurementApplication.units.WeightUnit;
 
 /**
  * Immutable class representing weight measurement

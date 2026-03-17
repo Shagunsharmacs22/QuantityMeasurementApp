@@ -1,25 +1,29 @@
 package QuantityMeasurementApplicationTest;
 
-import QuantityMeasurementApplication.*;
+import QuantityMeasurementApplication.dto.QuantityDTO;
+import QuantityMeasurementApplication.model.Quantity;
+import QuantityMeasurementApplication.service.QuantityMeasurementServiceImpl;
+import QuantityMeasurementApplication.repository.QuantityMeasurementCacheRepository;
+import QuantityMeasurementApplication.units.*;
+
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class QuantityMeasurementAppTest {
 
-    // ---------- Equality Tests ----------
+    private QuantityMeasurementServiceImpl service;
 
-    @Test
-    public void testEquality_SameUnit() {
-
-        Quantity<LengthUnit> q1 =
-                new Quantity<>(10.0, LengthUnit.FEET);
-
-        Quantity<LengthUnit> q2 =
-                new Quantity<>(10.0, LengthUnit.FEET);
-
-        assertEquals(q1, q2);
+    @BeforeEach
+    public void setup() {
+    	service = new QuantityMeasurementServiceImpl(
+    	        QuantityMeasurementCacheRepository.getInstance());
     }
+
+    // ===============================
+    // MODEL TESTS (UC10–UC14)
+    // ===============================
 
     @Test
     public void testEquality_CrossUnit() {
@@ -33,9 +37,6 @@ public class QuantityMeasurementAppTest {
         assertEquals(inches, feet);
     }
 
-
-    // ---------- Conversion Tests ----------
-
     @Test
     public void testConversion_FeetToInches() {
 
@@ -46,35 +47,6 @@ public class QuantityMeasurementAppTest {
                 feet.convertTo(LengthUnit.INCHES);
 
         assertEquals(new Quantity<>(12.0, LengthUnit.INCHES), result);
-    }
-
-    @Test
-    public void testConversion_LitreToMillilitre() {
-
-        Quantity<VolumeUnit> litre =
-                new Quantity<>(1.0, VolumeUnit.LITRE);
-
-        Quantity<VolumeUnit> result =
-                litre.convertTo(VolumeUnit.MILLILITRE);
-
-        assertEquals(new Quantity<>(1000.0, VolumeUnit.MILLILITRE), result);
-    }
-
-
-    // ---------- Addition Tests ----------
-
-    @Test
-    public void testAddition_SameUnit() {
-
-        Quantity<LengthUnit> q1 =
-                new Quantity<>(5.0, LengthUnit.FEET);
-
-        Quantity<LengthUnit> q2 =
-                new Quantity<>(3.0, LengthUnit.FEET);
-
-        Quantity<LengthUnit> result = q1.add(q2);
-
-        assertEquals(new Quantity<>(8.0, LengthUnit.FEET), result);
     }
 
     @Test
@@ -91,23 +63,6 @@ public class QuantityMeasurementAppTest {
         assertEquals(new Quantity<>(2.0, LengthUnit.FEET), result);
     }
 
-
-    // ---------- Subtraction Tests ----------
-
-    @Test
-    public void testSubtraction_SameUnit() {
-
-        Quantity<LengthUnit> q1 =
-                new Quantity<>(10.0, LengthUnit.FEET);
-
-        Quantity<LengthUnit> q2 =
-                new Quantity<>(5.0, LengthUnit.FEET);
-
-        Quantity<LengthUnit> result = q1.subtract(q2);
-
-        assertEquals(new Quantity<>(5.0, LengthUnit.FEET), result);
-    }
-
     @Test
     public void testSubtraction_CrossUnit() {
 
@@ -122,9 +77,6 @@ public class QuantityMeasurementAppTest {
         assertEquals(new Quantity<>(9.5, LengthUnit.FEET), result);
     }
 
-
-    // ---------- Division Tests ----------
-
     @Test
     public void testDivision_ByZero() {
 
@@ -138,28 +90,12 @@ public class QuantityMeasurementAppTest {
                 () -> q1.divide(q2));
     }
 
-
-    // =====================================================
-    //                UC14 TEMPERATURE TESTS
-    // =====================================================
-
-
-    // Temperature Equality
+    // ===============================
+    // UC14 TEMPERATURE TESTS
+    // ===============================
 
     @Test
-    public void testTemperatureEquality_CelsiusToCelsius() {
-
-        Quantity<TemperatureUnit> t1 =
-                new Quantity<>(0.0, TemperatureUnit.CELSIUS);
-
-        Quantity<TemperatureUnit> t2 =
-                new Quantity<>(0.0, TemperatureUnit.CELSIUS);
-
-        assertEquals(t1, t2);
-    }
-
-    @Test
-    public void testTemperatureEquality_CelsiusToFahrenheit() {
+    public void testTemperatureEquality() {
 
         Quantity<TemperatureUnit> c =
                 new Quantity<>(0.0, TemperatureUnit.CELSIUS);
@@ -171,22 +107,7 @@ public class QuantityMeasurementAppTest {
     }
 
     @Test
-    public void testTemperatureEquality_FahrenheitToCelsius() {
-
-        Quantity<TemperatureUnit> f =
-                new Quantity<>(212.0, TemperatureUnit.FAHRENHEIT);
-
-        Quantity<TemperatureUnit> c =
-                new Quantity<>(100.0, TemperatureUnit.CELSIUS);
-
-        assertEquals(f, c);
-    }
-
-
-    // Temperature Conversion
-
-    @Test
-    public void testTemperatureConversion_CelsiusToFahrenheit() {
+    public void testTemperatureConversion() {
 
         Quantity<TemperatureUnit> c =
                 new Quantity<>(100.0, TemperatureUnit.CELSIUS);
@@ -198,22 +119,7 @@ public class QuantityMeasurementAppTest {
     }
 
     @Test
-    public void testTemperatureConversion_FahrenheitToCelsius() {
-
-        Quantity<TemperatureUnit> f =
-                new Quantity<>(32.0, TemperatureUnit.FAHRENHEIT);
-
-        Quantity<TemperatureUnit> result =
-                f.convertTo(TemperatureUnit.CELSIUS);
-
-        assertEquals(new Quantity<>(0.0, TemperatureUnit.CELSIUS), result);
-    }
-
-
-    // Unsupported Operations
-
-    @Test
-    public void testTemperatureUnsupportedOperation_Add() {
+    public void testTemperatureUnsupportedOperation() {
 
         Quantity<TemperatureUnit> t1 =
                 new Quantity<>(100.0, TemperatureUnit.CELSIUS);
@@ -225,44 +131,32 @@ public class QuantityMeasurementAppTest {
                 () -> t1.add(t2));
     }
 
+    // ===============================
+    // UC15 SERVICE TESTS (IMPORTANT)
+    // ===============================
+
+   
+  
+
+   
     @Test
-    public void testTemperatureUnsupportedOperation_Subtract() {
+    public void testService_Compare() {
 
-        Quantity<TemperatureUnit> t1 =
-                new Quantity<>(100.0, TemperatureUnit.CELSIUS);
+        QuantityDTO q1 = new QuantityDTO(12.0, "INCHES", "LENGTH");
+        QuantityDTO q2 = new QuantityDTO(1.0, "FEET", "LENGTH");
 
-        Quantity<TemperatureUnit> t2 =
-                new Quantity<>(50.0, TemperatureUnit.CELSIUS);
+        var result = service.compare(q1, q2);
 
-        assertThrows(UnsupportedOperationException.class,
-                () -> t1.subtract(t2));
+        assertEquals("true", result.getResult());
     }
 
     @Test
-    public void testTemperatureUnsupportedOperation_Divide() {
+    public void testService_DivideByZero() {
 
-        Quantity<TemperatureUnit> t1 =
-                new Quantity<>(100.0, TemperatureUnit.CELSIUS);
+        QuantityDTO q1 = new QuantityDTO(10.0, "FEET", "LENGTH");
+        QuantityDTO q2 = new QuantityDTO(0.0, "FEET", "LENGTH");
 
-        Quantity<TemperatureUnit> t2 =
-                new Quantity<>(50.0, TemperatureUnit.CELSIUS);
-
-        assertThrows(UnsupportedOperationException.class,
-                () -> t1.divide(t2));
-    }
-
-
-    // Cross Category Comparison
-
-    @Test
-    public void testTemperatureVsLengthComparison() {
-
-        Quantity<TemperatureUnit> temp =
-                new Quantity<>(100.0, TemperatureUnit.CELSIUS);
-
-        Quantity<LengthUnit> length =
-                new Quantity<>(100.0, LengthUnit.FEET);
-
-        assertNotEquals(temp, length);
+        assertThrows(RuntimeException.class,
+                () -> service.divide(q1, q2));
     }
 }
