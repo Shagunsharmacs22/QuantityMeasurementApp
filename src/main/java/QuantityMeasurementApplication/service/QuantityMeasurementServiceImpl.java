@@ -15,7 +15,7 @@ public class QuantityMeasurementServiceImpl implements IQuantityMeasurementServi
         this.repository = repository;
     }
 
-    // 🔥 helper method (VERY IMPORTANT)
+    // ✅ Helper method
     private Quantity getQuantity(QuantityDTO dto) {
 
         switch (dto.getMeasurement()) {
@@ -41,28 +41,34 @@ public class QuantityMeasurementServiceImpl implements IQuantityMeasurementServi
         }
     }
 
+    // ✅ COMPARE
     @Override
-    public QuantityMeasurementEntity compare(QuantityDTO q1, QuantityDTO q2) {
+    public QuantityMeasurementEntity compare(QuantityDTO dto1, QuantityDTO dto2) {
 
-        Quantity qty1 = getQuantity(q1);
-        Quantity qty2 = getQuantity(q2);
+        Quantity qty1 = getQuantity(dto1);
+        Quantity qty2 = getQuantity(dto2);
+        boolean isEqual = qty1.equals(qty2); 
 
-        boolean result = qty1.equals(qty2);
-
-        QuantityMeasurementEntity entity =
-                new QuantityMeasurementEntity("COMPARE", String.valueOf(result));
+        QuantityMeasurementEntity entity = new QuantityMeasurementEntity();
+        entity.setValue(isEqual ? 1 : 0); // 1 = equal, 0 = not equal
+        entity.setUnit(dto1.getUnit());
+        entity.setType(dto1.getMeasurement());
+        entity.setOperation("COMPARE");
 
         repository.save(entity);
+
         return entity;
     }
 
+    // ✅ CONVERT
     @Override
-    public QuantityMeasurementEntity convert(QuantityDTO q, String targetUnit) {
+    public QuantityMeasurementEntity convert(QuantityDTO dto, String targetUnit) {
 
-        Quantity qty = getQuantity(q);
+        Quantity qty = getQuantity(dto);
+
         Quantity result;
 
-        switch (q.getMeasurement()) {
+        switch (dto.getMeasurement()) {
 
             case "LENGTH":
                 result = qty.convertTo(LengthUnit.valueOf(targetUnit));
@@ -81,15 +87,21 @@ public class QuantityMeasurementServiceImpl implements IQuantityMeasurementServi
                 break;
 
             default:
-                throw new QuantityMeasurementException("Invalid measurement type");
+                throw new QuantityMeasurementException("Invalid conversion type");
         }
 
-        QuantityMeasurementEntity entity =
-                new QuantityMeasurementEntity("CONVERT", result.toString());
+        QuantityMeasurementEntity entity = new QuantityMeasurementEntity();
+        entity.setValue(result.getValue());
+        entity.setUnit(targetUnit);
+        entity.setType(dto.getMeasurement());
+        entity.setOperation("CONVERT");
 
         repository.save(entity);
+
         return entity;
     }
+
+    // ✅ ADD
     @Override
     public QuantityMeasurementEntity add(QuantityDTO q1, QuantityDTO q2) {
 
@@ -98,13 +110,18 @@ public class QuantityMeasurementServiceImpl implements IQuantityMeasurementServi
 
         Quantity result = qty1.add(qty2);
 
-        QuantityMeasurementEntity entity =
-                new QuantityMeasurementEntity("ADD", result.toString());
+        QuantityMeasurementEntity entity = new QuantityMeasurementEntity();
+        entity.setValue(result.getValue());
+        entity.setUnit(result.getUnit().toString());
+        entity.setType(q1.getMeasurement());
+        entity.setOperation("ADD");
 
         repository.save(entity);
+
         return entity;
     }
 
+    // ✅ SUBTRACT
     @Override
     public QuantityMeasurementEntity subtract(QuantityDTO q1, QuantityDTO q2) {
 
@@ -113,13 +130,18 @@ public class QuantityMeasurementServiceImpl implements IQuantityMeasurementServi
 
         Quantity result = qty1.subtract(qty2);
 
-        QuantityMeasurementEntity entity =
-                new QuantityMeasurementEntity("SUBTRACT", result.toString());
+        QuantityMeasurementEntity entity = new QuantityMeasurementEntity();
+        entity.setValue(result.getValue());
+        entity.setUnit(result.getUnit().toString());
+        entity.setType(q1.getMeasurement());
+        entity.setOperation("SUBTRACT");
 
         repository.save(entity);
+
         return entity;
     }
 
+    // ✅ DIVIDE
     @Override
     public QuantityMeasurementEntity divide(QuantityDTO q1, QuantityDTO q2) {
 
@@ -132,10 +154,14 @@ public class QuantityMeasurementServiceImpl implements IQuantityMeasurementServi
 
         double result = qty1.divide(qty2);
 
-        QuantityMeasurementEntity entity =
-                new QuantityMeasurementEntity("DIVIDE", String.valueOf(result));
+        QuantityMeasurementEntity entity = new QuantityMeasurementEntity();
+        entity.setValue(result);
+        entity.setUnit(q1.getUnit());
+        entity.setType(q1.getMeasurement());
+        entity.setOperation("DIVIDE");
 
         repository.save(entity);
+
         return entity;
     }
 }
