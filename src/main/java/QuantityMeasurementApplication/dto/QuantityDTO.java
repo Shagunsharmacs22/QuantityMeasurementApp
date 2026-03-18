@@ -2,25 +2,40 @@ package QuantityMeasurementApplication.dto;
 
 public class QuantityDTO {
 
-    private double value;
-    private String unit;
-    private String measurement;
+    private Double value;
+    private String unitName;
+    private String measurementType;
+    private String operationType;
 
-    public QuantityDTO(double value, String unit, String measurement) {
-        this.value = value;
-        this.unit = unit;
-        this.measurement = measurement;
-    }
-
-    public double getValue() {
+    public Double getValue() {
         return value;
     }
 
-    public String getUnit() {
-        return unit;
+    public String getUnitName() {
+        return unitName;
     }
 
-    public String getMeasurement() {
-        return measurement;
+    public String getMeasurementType() {
+        return measurementType;
+    }
+
+    public String getOperationType() {
+        return operationType;
+    }
+
+    public void setValue(Double value) {
+        this.value = value;
+    }
+
+    public void setUnitName(String unitName) {
+        this.unitName = unitName;
+    }
+
+    public void setMeasurementType(String measurementType) {
+        this.measurementType = measurementType;
+    }
+
+    public void setOperationType(String operationType) {
+        this.operationType = operationType;
     }
 }

@@ -1,55 +1,59 @@
 package QuantityMeasurementApplication.entity;
+
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "quantity_measurements")
 public class QuantityMeasurementEntity {
 
-    private double value;
-    private String unit;
-    private String type;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "quantity_value") // value keyword issue fix
+    private Double value;
+
+    private String unitName;
+
+    private String measurementType;
+
     private String operation;
 
-    public QuantityMeasurementEntity() {
-		// TODO Auto-generated constructor stub
-	}
+    // getters and setters
 
-	// ✅ GETTERS
-    public double getValue() {
+    public Long getId() {
+        return id;
+    }
+
+    public Double getValue() {
         return value;
     }
 
-    public String getUnit() {
-        return unit;
+    public void setValue(Double value) {
+        this.value = value;
     }
 
-    public String getType() {
-        return type;
+    public String getUnitName() {
+        return unitName;
+    }
+
+    public void setUnitName(String unitName) {
+        this.unitName = unitName;
+    }
+
+    public String getMeasurementType() {
+        return measurementType;
+    }
+
+    public void setMeasurementType(String measurementType) {
+        this.measurementType = measurementType;
     }
 
     public String getOperation() {
         return operation;
     }
 
-    // ✅ SETTERS
-    public void setValue(double value) {
-        this.value = value;
-    }
-
-    public void setUnit(String unit) {
-        this.unit = unit;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
     public void setOperation(String operation) {
         this.operation = operation;
-    }
-    @Override
-    public String toString() {
-        return "QuantityMeasurementEntity{" +
-                "value=" + value +
-                ", unit='" + unit + '\'' +
-                ", type='" + type + '\'' +
-                ", operation='" + operation + '\'' +
-                '}';
     }
 }
