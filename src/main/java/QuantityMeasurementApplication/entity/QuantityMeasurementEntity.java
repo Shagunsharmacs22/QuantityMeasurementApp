@@ -1,59 +1,41 @@
 package QuantityMeasurementApplication.entity;
 
 import jakarta.persistence.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "quantity_measurements")
+@Data
+@NoArgsConstructor
 public class QuantityMeasurementEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    @Column(name = "quantity_value") // value keyword issue fix
-    private Double value;
+	private String operation;
 
-    private String unitName;
+	private double operand1;
+	private double operand2;
 
-    private String measurementType;
+	private double result;
 
-    private String operation;
+	private boolean error;
 
-    // getters and setters
+	private String errorMessage;
 
-    public Long getId() {
-        return id;
-    }
+	public QuantityMeasurementEntity(String operation, double op1, double op2, double result) {
+		this.operation = operation;
+		this.operand1 = op1;
+		this.operand2 = op2;
+		this.result = result;
+		this.error = false;
+	}
 
-    public Double getValue() {
-        return value;
-    }
-
-    public void setValue(Double value) {
-        this.value = value;
-    }
-
-    public String getUnitName() {
-        return unitName;
-    }
-
-    public void setUnitName(String unitName) {
-        this.unitName = unitName;
-    }
-
-    public String getMeasurementType() {
-        return measurementType;
-    }
-
-    public void setMeasurementType(String measurementType) {
-        this.measurementType = measurementType;
-    }
-
-    public String getOperation() {
-        return operation;
-    }
-
-    public void setOperation(String operation) {
-        this.operation = operation;
-    }
+	public QuantityMeasurementEntity(String operation, String errorMessage) {
+		this.operation = operation;
+		this.error = true;
+		this.errorMessage = errorMessage;
+	}
 }
