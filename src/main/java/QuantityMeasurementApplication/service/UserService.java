@@ -27,19 +27,18 @@ public class UserService {
         return repo.save(user);
     }
 
-    public User login(User user) {
+    public String login(User user) {
 
         User dbUser = repo.findByEmail(user.getEmail())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        // LOCAL login
         if (dbUser.getProvider().equals("LOCAL")) {
             if (!dbUser.getPassword().equals(user.getPassword())) {
                 throw new RuntimeException("Invalid password");
             }
         }
 
-        // GOOGLE login → password check nahi hoga
-        return dbUser;
+        // 🔥 BAS YE LINE IMPORTANT
+        return jwtUtil.generateToken(dbUser.getEmail());
     }
 }

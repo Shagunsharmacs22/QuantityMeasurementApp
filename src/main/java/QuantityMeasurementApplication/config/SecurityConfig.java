@@ -1,11 +1,18 @@
 package QuantityMeasurementApplication.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.*;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.*;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import QuantityMeasurementApplication.security.JwtFilter;
 
 @Configuration
 public class SecurityConfig {
+
+    @Autowired
+    private JwtFilter jwtFilter;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -14,24 +21,19 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
 
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers(
-                        "/auth/**",
-                        "/login",
-                        "/oauth2/**",
-                        "/login/oauth2/**"
-                ).permitAll()
-                .anyRequest().authenticated()
+                .requestMatchers("/auth/**").permitAll()  // login/register free
+                .anyRequest().authenticated()             // baaki secure
             )
 
-            // ✅ Manual login (default Spring page)
-            .formLogin(form -> form
-                .defaultSuccessUrl("/auth/success", true)
-            )
-
-            // ✅ Google login
             .oauth2Login(oauth -> oauth
                 .defaultSuccessUrl("/auth/success", true)
-            );
+            )
+
+            .formLogin(form -> form.disable())   // ❌ login page band
+            .httpBasic(basic -> basic.disable()); // ❌ basic auth band
+
+        // 🔥 JWT FILTER ADD
+        http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
