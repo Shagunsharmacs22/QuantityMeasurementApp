@@ -1,6 +1,7 @@
 package QuantityMeasurementApplication.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 import lombok.Data;
 
 @Entity
@@ -12,7 +13,17 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "Name required")
     private String name;
+
+    @Email(message = "Invalid email")
+    @NotBlank(message = "Email required")
+    @Column(unique = true)
     private String email;
-    private String provider; // GOOGLE
+
+    // ❌ yaha NotBlank mat lagana (Google ke liye null hoga)
+    private String password;
+
+    @NotBlank(message = "Provider required")
+    private String provider; // LOCAL or GOOGLE
 }
