@@ -23,22 +23,23 @@ public class AuthController {
     private JwtUtil jwtUtil;
 
     @PostMapping("/login")
-    public String manualLogin(@RequestBody User user) {
+    public java.util.Map<String, String> manualLogin(@RequestBody User user) {
 
-        // check user valid hai ya nahi
-        service.login(user);  // assume ye validation kar raha hai
+        service.login(user);
 
-        // 🔥 TOKEN GENERATE
-        return jwtUtil.generateToken(user.getEmail());
+        String token = jwtUtil.generateToken(user.getEmail());
+
+        return java.util.Map.of("token", token);
     }
 
     @PostMapping("/register")
-    public String register(@Valid @RequestBody User user) {
+    public java.util.Map<String, String> register(@Valid @RequestBody User user) {
 
-        service.register(user);  // user DB me save
+        service.register(user);
 
-        // 🔥 TOKEN GENERATE after register
-        return jwtUtil.generateToken(user.getEmail());
+        String token = jwtUtil.generateToken(user.getEmail());
+
+        return java.util.Map.of("token", token);
     }
    
 
@@ -58,21 +59,25 @@ public class AuthController {
     }
     */
 
-
     @GetMapping("/success")
-    public String success(org.springframework.security.core.Authentication authentication) {
+    public void success(
+            org.springframework.security.core.Authentication authentication,
+            jakarta.servlet.http.HttpServletResponse response
+    ) throws java.io.IOException {
 
         Object principal = authentication.getPrincipal();
+        String email = null;
 
         if (principal instanceof org.springframework.security.oauth2.core.oidc.user.OidcUser oidcUser) {
-            return jwtUtil.generateToken(oidcUser.getEmail());
+            email = oidcUser.getEmail();
+        } 
+        else if (principal instanceof org.springframework.security.oauth2.core.user.OAuth2User oauthUser) {
+            email = (String) oauthUser.getAttributes().get("email");
         }
 
-        if (principal instanceof org.springframework.security.oauth2.core.user.OAuth2User oauthUser) {
-            String email = (String) oauthUser.getAttributes().get("email");
-            return jwtUtil.generateToken(email);
-        }
+        String token = jwtUtil.generateToken(email);
 
-        return "Login failed ❌";
+        // 🔥 IMPORTANT LINE
+        response.sendRedirect("http://127.0.0.1:5500/index.html?token=" + token);
     }
 }
