@@ -29,9 +29,10 @@ public class OAuthSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
         System.out.println("🔥 LOGIN SUCCESS");
         System.out.println("EMAIL: " + email);
 
-        // 🔥 REAL JWT TOKEN
-        String token = "test-token";
+        // ✅ REAL JWT TOKEN generate karo
+        String token = jwtUtil.generateToken(email);
 
-        response.sendRedirect("http://localhost:8080/success?token=" + token);
+        // ✅ FRONTEND pe redirect karo (IMPORTANT)
+        response.sendRedirect("http://127.0.0.1:5500/index.html?token=" + token);
     }
 }

@@ -1,6 +1,7 @@
 package QuantityMeasurementApplication.security;
 
 import java.io.IOException;
+import java.util.Collections;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -23,6 +24,14 @@ public class JwtFilter extends OncePerRequestFilter {
                                    FilterChain chain)
             throws ServletException, IOException {
 
+        String path = request.getRequestURI();
+
+        // 🔥 AUTH APIs को skip करो
+        if (path.startsWith("/auth")) {
+            chain.doFilter(request, response);
+            return;
+        }
+
         String header = request.getHeader("Authorization");
 
         if (header != null && header.startsWith("Bearer ")) {
@@ -33,12 +42,19 @@ public class JwtFilter extends OncePerRequestFilter {
                 String email = jwtUtil.extractEmail(token);
 
                 UsernamePasswordAuthenticationToken auth =
-                        new UsernamePasswordAuthenticationToken(email, null, null);
+                        new UsernamePasswordAuthenticationToken(
+                                email,
+                                null,
+                                Collections.emptyList()   // 🔥 FIX
+                        );
 
                 SecurityContextHolder.getContext().setAuthentication(auth);
 
             } catch (Exception e) {
-                System.out.println("Invalid Token ❌");
+                // 🔥 Proper response
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                response.getWriter().write("Invalid Token ❌");
+                return;
             }
         }
 
