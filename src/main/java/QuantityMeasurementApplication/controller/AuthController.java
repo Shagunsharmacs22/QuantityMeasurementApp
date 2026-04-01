@@ -78,6 +78,6 @@ public class AuthController {
         String token = jwtUtil.generateToken(email);
 
         // 🔥 IMPORTANT LINE
-        response.sendRedirect("http://127.0.0.1:5500/index.html?token=" + token);
+        response.sendRedirect("http://localhost:4200/auth?token=" + token);
     }
 }
