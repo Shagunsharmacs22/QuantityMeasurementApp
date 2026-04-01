@@ -33,6 +33,6 @@ public class OAuthSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
         String token = jwtUtil.generateToken(email);
 
         // ✅ FRONTEND pe redirect karo (IMPORTANT)
-        response.sendRedirect("http://127.0.0.1:5500/index.html?token=" + token);
+        response.sendRedirect("http://localhost:4200/auth?token=" + token);
     }
 }

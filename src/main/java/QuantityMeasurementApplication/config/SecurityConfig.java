@@ -31,7 +31,7 @@ public class SecurityConfig {
                 .anyRequest().authenticated()
             )
             .oauth2Login(oauth -> oauth
-                .successHandler(successHandler) // ✅ tera handler
+                .successHandler(successHandler) 
             )
             .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
@@ -43,10 +43,13 @@ public class SecurityConfig {
         CorsConfiguration config = new CorsConfiguration();
 
         config.setAllowCredentials(true);
+        config.addAllowedOrigin("http://localhost:4200");   // ✅ YEH ADD KARO
+        config.addAllowedOrigin("http://127.0.0.1:4200");
         config.addAllowedOrigin("http://127.0.0.1:5500");
         config.addAllowedOrigin("http://localhost:5500");
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
+        
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
