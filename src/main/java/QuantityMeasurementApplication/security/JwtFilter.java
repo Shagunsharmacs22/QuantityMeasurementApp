@@ -25,9 +25,10 @@ public class JwtFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         String path = request.getRequestURI();
+        String method = request.getMethod();
 
-        // 🔥 AUTH APIs को skip करो
-        if (path.startsWith("/auth")) {
+        // ✅ OPTIONS preflight aur auth routes skip karo
+        if (method.equals("OPTIONS") || path.startsWith("/auth") || path.startsWith("/oauth2")) {
             chain.doFilter(request, response);
             return;
         }
