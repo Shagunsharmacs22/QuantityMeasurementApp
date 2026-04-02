@@ -12,6 +12,9 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import QuantityMeasurementApplication.security.JwtFilter;
 import QuantityMeasurementApplication.security.OAuthSuccessHandler;
 
+import java.util.Arrays;
+import java.util.List;
+
 @Configuration
 public class SecurityConfig {
 
@@ -22,9 +25,8 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-
         http
-            .cors(cors -> cors.configurationSource(corsConfigurationSource())) // ✅ explicitly pass karo
+            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/auth/**", "/oauth2/**", "/login/**").permitAll()
@@ -41,20 +43,14 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-
+        config.setAllowedOriginPatterns(List.of("*"));
+        config.setAllowedMethods(Arrays.asList("GET","POST","PUT","DELETE","OPTIONS","PATCH"));
+        config.setAllowedHeaders(List.of("*"));
         config.setAllowCredentials(true);
-        config.addAllowedOrigin("http://localhost:4200");
-        config.addAllowedOrigin("http://127.0.0.1:4200");
-        config.addAllowedOrigin("http://127.0.0.1:5500");
-        config.addAllowedOrigin("http://localhost:5500");
-        config.addAllowedOrigin("https://quantity-measurement-app-frontend-livid.vercel.app"); // ✅ Vercel URL
-
-        config.addAllowedHeader("*");
-        config.addAllowedMethod("*");
+        config.setMaxAge(3600L);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
-
         return source;
     }
 }
