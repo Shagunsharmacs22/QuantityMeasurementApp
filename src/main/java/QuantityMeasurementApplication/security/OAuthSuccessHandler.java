@@ -33,6 +33,6 @@ public class OAuthSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
         String token = jwtUtil.generateToken(email);
 
         // ✅ FRONTEND pe redirect karo (IMPORTANT)
-        response.sendRedirect("http://localhost:4200/auth?token=" + token);
+        response.sendRedirect("https://quantity-measurement-app-frontend-livid.vercel.app/auth?token=" + token);
     }
 }

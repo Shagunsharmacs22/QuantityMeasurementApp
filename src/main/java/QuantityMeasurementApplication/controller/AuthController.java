@@ -78,6 +78,6 @@ public class AuthController {
         String token = jwtUtil.generateToken(email);
 
         // 🔥 IMPORTANT LINE
-        response.sendRedirect("http://localhost:4200/auth?token=" + token);
+        response.sendRedirect("https://quantity-measurement-app-frontend-livid.vercel.app/auth?token=" + token);
     }
 }
