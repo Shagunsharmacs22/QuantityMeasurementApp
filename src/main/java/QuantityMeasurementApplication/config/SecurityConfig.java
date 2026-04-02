@@ -24,32 +24,33 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http
-            .cors(cors -> {}) // ✅ correct syntax
+            .cors(cors -> cors.configurationSource(corsConfigurationSource())) // ✅ explicitly pass karo
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/auth/**", "/oauth2/**").permitAll()
+                .requestMatchers("/auth/**", "/oauth2/**", "/login/**").permitAll()
                 .anyRequest().authenticated()
             )
             .oauth2Login(oauth -> oauth
-                .successHandler(successHandler) 
+                .successHandler(successHandler)
             )
             .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
-    
+
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
 
         config.setAllowCredentials(true);
-        config.addAllowedOrigin("http://localhost:4200");   // ✅ YEH ADD KARO
+        config.addAllowedOrigin("http://localhost:4200");
         config.addAllowedOrigin("http://127.0.0.1:4200");
         config.addAllowedOrigin("http://127.0.0.1:5500");
         config.addAllowedOrigin("http://localhost:5500");
+        config.addAllowedOrigin("https://quantity-measurement-app-frontend-livid.vercel.app"); // ✅ Vercel URL
+
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
-        
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
